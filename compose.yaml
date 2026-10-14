@@ -1,0 +1,26 @@
+services:
+  furby:
+    build: .
+    container_name: furby-osint
+    ports:
+      - "8501:8501"
+    volumes:
+      - furby_data:/app/data
+    restart: unless-stopped
+
+  ua-server:
+    build: .
+    container_name: furby-ua-server
+    command: ["python", "-m", "src.ua_server"]
+    environment:
+      UA_HOST: "0.0.0.0"
+      UA_PORT: "8080"
+      UA_LOG_FILE: "/app/data/user_agents.jsonl"
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - furby_data:/app/data
+    restart: unless-stopped
+
+volumes:
+  furby_data:
